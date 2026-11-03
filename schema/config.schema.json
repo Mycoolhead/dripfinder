@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://dripfinder/config.schema.json",
+  "title": "DripFinder client config",
+  "type": "object",
+  "required": ["clinic", "questions", "items", "approved"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string" },
+    "vertical": { "type": "string" },
+    "approved": {
+      "type": "object",
+      "required": ["by", "date"],
+      "additionalProperties": false,
+      "properties": {
+        "by": { "type": "string" },
+        "date": { "type": "string" }
+      }
+    },
+    "clinic": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "contactName": { "type": "string" },
+        "phone": { "type": "string" },
+        "smsNumber": { "type": "string" },
+        "bookingUrl": { "type": "string" },
+        "textLabel": { "type": "string" }
+      }
+    },
+    "brand": { "type": "object" },
+    "ui": { "type": "object" },
+    "utm": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "fallback": { "type": "string" },
+    "customOption": { "type": "string" },
+    "resultTitle": { "type": "string" },
+    "newClientNote": { "type": "string" },
+    "disclaimer": { "type": "string" },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "options"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "hint": { "type": "string" },
+          "eyebrow": { "type": "string" },
+          "multi": { "type": "boolean" },
+          "showInWhy": { "type": "boolean" },
+          "options": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "label"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "label": { "type": "string", "minLength": 1 },
+                "short": { "type": "string" },
+                "sub": { "type": "string" },
+                "exclusive": { "type": "boolean" },
+                "flag": { "type": "string" },
+                "stop": { "type": "string" },
+                "tags": { "type": "object", "additionalProperties": { "type": "number" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "stops": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string" },
+          "body": { "type": "string" },
+          "smsText": { "type": "string" },
+          "textLabel": { "type": "string" },
+          "cta": {
+            "type": "object",
+            "required": ["label", "href"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string" },
+              "href": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "price": { "type": "string" },
+          "short": { "type": "string" },
+          "blurb": { "type": "string" },
+          "facts": { "type": "array", "items": { "type": "string" } },
+          "bookUrl": { "type": "string" },
+          "hideFromMatch": { "type": "boolean" },
+          "tags": { "type": "object", "additionalProperties": { "type": "number" } }
+        }
+      }
+    },
+    "addons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text"],
+        "additionalProperties": false,
+        "properties": {
+          "text": { "type": "string" },
+          "whenTag": { "type": "string" },
+          "min": { "type": "number" },
+          "notFor": { "type": "array", "items": { "type": "string" } },
+          "onlyFor": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "afterHours": {
+      "type": "object",
+      "required": ["text", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "text": { "type": "string" },
+        "linkLabel": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "embed": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": { "type": "string" },
+        "containerId": { "type": "string" },
+        "chips": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "label": { "type": "string" },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["text", "feel"],
+                "additionalProperties": false,
+                "properties": {
+                  "text": { "type": "string" },
+                  "feel": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "strip": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "lead": { "type": "string" },
+            "text": { "type": "string" },
+            "cta": { "type": "string" }
+          }
+        },
+        "crawlable": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "noun": { "type": "string" },
+            "heading": { "type": "string" },
+            "intro": { "type": "string" },
+            "faq": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["q", "item"],
+                "additionalProperties": false,
+                "properties": {
+                  "q": { "type": "string" },
+                  "item": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

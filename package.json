@@ -1,0 +1,25 @@
+{
+  "name": "dripfinder",
+  "version": "0.3.0",
+  "private": true,
+  "description": "White-label Help Me Choose quiz engine for clinic and service websites. Michael Head Marketing.",
+  "license": "UNLICENSED",
+  "author": "Michael Head <michael@nextstepcoach.org>",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "validate": "node scripts/validate.js",
+    "test": "playwright test",
+    "check-links": "node scripts/check-links.js",
+    "pretest": "node scripts/build.js"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.1",
+    "@playwright/test": "1.56.0",
+    "ajv": "8.20.0",
+    "terser": "5.31.0"
+  }
+}

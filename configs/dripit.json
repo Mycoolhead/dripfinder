@@ -1,0 +1,216 @@
+{
+  "vertical": "iv",
+  "approved": { "by": "", "date": "" },
+  "clinic": {
+    "name": "Drip It IV Solutions",
+    "contactName": "Deanna",
+    "phone": "(321) 345-3616",
+    "smsNumber": "3213453616",
+    "bookingUrl": "https://dripitivsolutions.glossgenius.com/services",
+    "textLabel": "Text Deanna"
+  },
+  "brand": {
+    "accent": "#0092B5",
+    "button": "#00728D",
+    "accentInk": "#ffffff",
+    "soft": "#E3F7FA",
+    "bg": "#ffffff",
+    "surface": "#F5FBFC",
+    "fg": "#0B1F26",
+    "muted": "#4F656C",
+    "line": "#CFE3E8",
+    "radius": "12px",
+    "font": "'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif",
+    "headingFont": "'Noto Sans JP', 'Inter', system-ui, sans-serif",
+    "headingWeight": "700"
+  },
+  "utm": { "source": "website", "medium": "dripfinder", "campaign": "find-your-drip" },
+  "fallback": "myers",
+  "customOption": "custom",
+  "resultTitle": "Here's the IV that fits you best",
+  "questions": [
+    {
+      "id": "feel",
+      "title": "What are you dealing with right now?",
+      "hint": "Pick everything that fits.",
+      "multi": true,
+      "showInWhy": true,
+      "options": [
+        { "id": "tired", "label": "Tired, foggy, running on empty", "short": "low energy", "tags": { "energy": 3 } },
+        { "id": "headache", "label": "Headache or migraine", "short": "headache", "tags": { "headache": 3 } },
+        { "id": "nausea", "label": "Nauseous or upset stomach", "short": "nausea", "tags": { "nausea": 3 } },
+        { "id": "sick", "label": "Feeling run down or coming down with something", "short": "feeling run down", "tags": { "immune": 3, "sick": 2 } },
+        { "id": "hungover", "label": "Hungover", "short": "hangover", "tags": { "hangover": 4, "nausea": 1, "headache": 1, "hydrate": 1 } },
+        { "id": "dry", "label": "Dehydrated from heat, sweat or travel", "short": "dehydration", "tags": { "hydrate": 4 } },
+        { "id": "sore", "label": "Sore muscles or slow recovery", "short": "sore muscles", "tags": { "recovery": 4 } },
+        { "id": "glow", "label": "Want my skin and energy to look refreshed", "short": "glow", "tags": { "glow": 4 } },
+        { "id": "well", "label": "I feel fine and want to stay that way", "short": "staying well", "tags": { "wellness": 3 } }
+      ]
+    },
+    {
+      "id": "week",
+      "title": "What's going on this week?",
+      "multi": false,
+      "options": [
+        { "id": "night", "label": "A big night, a wedding or a weekend away", "tags": { "hangover": 3, "hydrate": 1 } },
+        { "id": "bug", "label": "A bug going around, or a cruise coming up", "tags": { "immune": 3 } },
+        { "id": "train", "label": "Training, a race, or a tournament", "tags": { "recovery": 3, "hydrate": 1 } },
+        { "id": "outside", "label": "Long days outside or work in the heat", "tags": { "hydrate": 3 } },
+        { "id": "event", "label": "A big event and I want to look my best", "tags": { "glow": 3, "energy": 1 } },
+        { "id": "grind", "label": "Work and life are wearing me down", "tags": { "energy": 3, "wellness": 1 } },
+        { "id": "routine", "label": "Just regular upkeep", "tags": { "wellness": 3 } }
+      ]
+    },
+    {
+      "id": "client",
+      "title": "Have you had an IV with Deanna before?",
+      "multi": false,
+      "options": [
+        { "id": "new", "label": "No, this would be my first time", "flag": "newClient" },
+        { "id": "returning", "label": "Yes, I've been before" }
+      ]
+    },
+    {
+      "id": "safety",
+      "eyebrow": "Last step",
+      "title": "One quick safety check",
+      "hint": "Do any of these apply to you right now? Pick all that fit.",
+      "multi": true,
+      "options": [
+        { "id": "none", "label": "None of these", "exclusive": true },
+        { "id": "emergency", "label": "Chest pain, trouble breathing, fainting or confusion", "stop": "emergency" },
+        { "id": "vomit", "label": "Throwing up for more than a day, or can't keep any fluids down", "stop": "talk" },
+        { "id": "pregnant", "label": "Pregnant or breastfeeding", "stop": "talk" },
+        { "id": "organ", "label": "Kidney disease, heart failure, or on dialysis", "stop": "talk" }
+      ]
+    }
+  ],
+  "stops": {
+    "emergency": {
+      "title": "Please get care right away",
+      "body": "Chest pain, trouble breathing, fainting or confusion need emergency care. Call 911 or go to the nearest emergency room. An IV at home is not the right care for this.",
+      "cta": { "label": "Call 911", "href": "tel:911" }
+    },
+    "talk": {
+      "title": "Let's talk before you book",
+      "body": "What you picked means Deanna should talk with you first so she can make sure an IV is safe for you and choose the right one. She's a registered nurse with more than 20 years of ICU experience. Text or call and she'll walk you through it.",
+      "smsText": "Hi Deanna, I used the Help Me Choose quiz on your site. Before I book, can we talk about what's safe for me?",
+      "textLabel": "Text Deanna"
+    }
+  },
+  "items": [
+    {
+      "id": "hangover-flu",
+      "name": "Hangover/Flu Relief",
+      "price": "$229",
+      "short": "For the morning after, or when a bug hits",
+      "blurb": "Hydration, electrolytes and targeted vitamins to clear the fog, ease the headache and get you back on your feet.",
+      "facts": ["Comes to you", "About 45 to 60 minutes", "Started by an RN"],
+      "bookUrl": "https://dripitivsolutions.glossgenius.com/services?service_token=1000f-c4a12d54-731a-4fd2-8943-29e785ca1380",
+      "tags": { "hangover": 3, "nausea": 3, "headache": 3, "sick": 2, "hydrate": 1 }
+    },
+    {
+      "id": "immunity-boost",
+      "name": "Immunity Boost",
+      "price": "$229",
+      "short": "When you feel something coming on",
+      "blurb": "High-dose vitamin C, zinc and immune-supporting nutrients to help your body fight back and recover faster.",
+      "facts": ["Comes to you", "About 45 to 60 minutes", "Started by an RN"],
+      "bookUrl": "https://dripitivsolutions.glossgenius.com/services?service_token=1000f-7a4cc7ee-7fb6-4ba4-bd5b-5de29dd921a3",
+      "tags": { "immune": 4, "sick": 2 }
+    },
+    {
+      "id": "myers",
+      "name": "Myers Cocktail",
+      "price": "$229",
+      "short": "The classic for energy and all-around support",
+      "blurb": "IV fluids, B-complex vitamins, vitamin C and magnesium for energy, immune health and whole-body replenishment.",
+      "facts": ["Comes to you", "About 45 to 60 minutes", "Started by an RN"],
+      "bookUrl": "https://dripitivsolutions.glossgenius.com/services?service_token=1000f-04bc4708-2d12-4b17-b433-442b99a3b9d9",
+      "tags": { "energy": 3, "wellness": 3, "immune": 1 }
+    },
+    {
+      "id": "peak-performance",
+      "name": "Peak Performance",
+      "price": "$229",
+      "short": "Recovery after training or a race",
+      "blurb": "Fluids, electrolytes and key nutrients that support muscle repair, cut post-workout soreness and restore your stamina.",
+      "facts": ["Comes to you", "About 45 to 60 minutes", "Started by an RN"],
+      "bookUrl": "https://dripitivsolutions.glossgenius.com/services?service_token=1000f-23662a05-42e7-4c07-a34a-b12fe753d03e",
+      "tags": { "recovery": 4, "hydrate": 1 }
+    },
+    {
+      "id": "hydration-hero",
+      "name": "Hydration Hero",
+      "price": "$179",
+      "short": "Fluids and electrolytes, fast",
+      "blurb": "IV fluids and essential electrolytes straight into your bloodstream for fast rehydration. Made for Florida heat, travel and long days.",
+      "facts": ["Comes to you", "About 45 to 60 minutes", "Started by an RN"],
+      "bookUrl": "https://dripitivsolutions.glossgenius.com/services?service_token=1000f-8c7d1432-3d4b-49b3-a087-5be9795332d7",
+      "tags": { "hydrate": 3, "wellness": 1 }
+    },
+    {
+      "id": "glutathione",
+      "name": "High Dose Glutathione",
+      "price": "$199",
+      "short": "Antioxidant support and a refreshed glow",
+      "blurb": "A potent antioxidant infusion that supports detox and immune function, and the refreshed look people book it for.",
+      "facts": ["Comes to you", "Started by an RN"],
+      "bookUrl": "https://dripitivsolutions.glossgenius.com/book?service_token=1000f-9c8c7c51-cb5a-4568-a7ca-6c452c16cb5d",
+      "tags": { "glow": 4, "wellness": 1 }
+    },
+    {
+      "id": "custom",
+      "name": "Build Your Custom Drip",
+      "price": "$249",
+      "short": "Deanna calls and builds it around you",
+      "blurb": "Deanna calls you, talks through what's going on and builds the blend around your needs.",
+      "hideFromMatch": true,
+      "bookUrl": "https://dripitivsolutions.glossgenius.com/book?service_token=1000f-e88deeb4-1fee-443d-bc1b-9a4319dbde44",
+      "tags": {}
+    }
+  ],
+  "addons": [
+    { "whenTag": "nausea", "min": 3, "text": "Feeling sick to your stomach? Add an anti-nausea IV push for $30 when you book." },
+    { "notFor": ["glutathione"], "text": "Want more? Make any IV Elite with glutathione for $20 more. Choose it when you book." }
+  ],
+  "newClientNote": "First visit? There's a one-time $25 telehealth consult with a provider, good for a full year. Deanna sends you the link after you book.",
+  "afterHours": {
+    "name": "After Hours",
+    "text": "Regular hours are 9am to 7pm. Need 7 to 9am or 7 to 10pm? A $75 convenience fee applies.",
+    "linkLabel": "Book after hours",
+    "url": "https://dripitivsolutions.glossgenius.com/book?service_token=1000f-97c336d1-6c76-4dec-8c4e-962ba31df0d1"
+  },
+  "disclaimer": "This is a general guide, not medical advice. Deanna reviews your health history and a provider confirms your IV before any treatment.",
+  "embed": {
+    "page": "/find-your-drip",
+    "containerId": "drip-finder",
+    "chips": {
+      "label": "Not sure what you need? Tap what's going on:",
+      "items": [
+        { "text": "Hungover", "feel": "hungover" },
+        { "text": "Sick or run down", "feel": "sick" },
+        { "text": "Wiped out", "feel": "tired" },
+        { "text": "Dehydrated", "feel": "dry" }
+      ]
+    },
+    "strip": {
+      "lead": "Not sure what you need?",
+      "text": "Tell us how you feel and we'll match you in 30 seconds.",
+      "cta": "Help Me Choose"
+    },
+    "crawlable": {
+      "noun": "IV",
+      "heading": "Which IV is right for me?",
+      "intro": "Tell us how you feel and we'll match you to the right IV. Here is how our IVs line up with the most common reasons people book.",
+      "faq": [
+        { "q": "What's the best IV for a hangover?", "item": "hangover-flu" },
+        { "q": "What IV helps when I'm run down or getting sick?", "item": "immunity-boost" },
+        { "q": "What's a good IV for low energy and all-around support?", "item": "myers" },
+        { "q": "What IV helps muscle recovery after training?", "item": "peak-performance" },
+        { "q": "What IV rehydrates me fast?", "item": "hydration-hero" },
+        { "q": "What IV is best for a refreshed glow?", "item": "glutathione" }
+      ]
+    }
+  }
+}

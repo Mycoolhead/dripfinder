@@ -1,0 +1,22 @@
+<!-- DripFinder symptom chips for Drip It IV Solutions. Paste into ONE Custom Code element directly under the hero buttons on the homepage. -->
+<div class="dfx-chips" aria-label="Help Me Choose by symptom">
+  <p class="dfx-chips__label">Not sure what you need? Tap what's going on:</p>
+  <div class="dfx-chips__row">
+    <a class="dfx-chip" href="/find-your-drip?feel=hungover&amp;src=home-chip">Hungover</a>
+    <a class="dfx-chip" href="/find-your-drip?feel=sick&amp;src=home-chip">Sick or run down</a>
+    <a class="dfx-chip" href="/find-your-drip?feel=tired&amp;src=home-chip">Wiped out</a>
+    <a class="dfx-chip" href="/find-your-drip?feel=dry&amp;src=home-chip">Dehydrated</a>
+  </div>
+</div>
+<style>
+.dfx-chips{margin:14px 0 4px;font-family:'Noto Sans JP', 'Inter', system-ui, sans-serif;max-width:600px}
+.dfx-chips__label{margin:0 0 8px;font-size:14px;font-weight:700;color:#0B1F26;letter-spacing:.01em}
+.dfx-chips__row{display:flex;flex-wrap:wrap;gap:8px}
+.dfx-chip{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:10px 14px;border:1.5px solid #0092B5;background:#ffffff;color:#00728D;font-size:15px;font-weight:600;line-height:1;text-decoration:none;border-radius:999px;white-space:nowrap;transition:background .15s,color .15s}
+.dfx-chip:hover,.dfx-chip:focus-visible{background:#0092B5;color:#ffffff;outline:none}
+@media (max-width:640px){
+  .dfx-chips__row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;margin-right:-16px;padding-right:16px;scrollbar-width:none}
+  .dfx-chips__row::-webkit-scrollbar{display:none}
+}
+@media (prefers-reduced-motion:reduce){.dfx-chip{transition:none}}
+</style>

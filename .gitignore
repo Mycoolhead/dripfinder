@@ -1,0 +1,11 @@
+node_modules/
+test-results/
+playwright-report/
+.playwright/
+*.png
+!docs/mockups/*.png
+.DS_Store
+# secrets and local-only files live outside the repo (see PROMPT Phase 2)
+*.local
+.env
+.env.*
