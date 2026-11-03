@@ -242,5 +242,6 @@ module.exports = {
   chipsBlock: chipsBlock,
   stripBlock: stripBlock,
   crawlable: crawlable,
-  allSnippets: allSnippets
+  allSnippets: allSnippets,
+  runtimeConfig: runtimeConfig
 };

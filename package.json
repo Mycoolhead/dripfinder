@@ -1,6 +1,6 @@
 {
   "name": "dripfinder",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "White-label Help Me Choose quiz engine for clinic and service websites. Michael Head Marketing.",
   "license": "UNLICENSED",
@@ -14,7 +14,11 @@
     "validate": "node scripts/validate.js",
     "test": "playwright test",
     "check-links": "node scripts/check-links.js",
-    "pretest": "node scripts/build.js"
+    "pretest": "node scripts/build.js",
+    "assemble": "node scripts/assemble-site.js",
+    "release": "npm run validate && npm run build && npm run assemble",
+    "dev": "npm run build && npm run assemble && wrangler dev",
+    "deploy": "npm run validate && npm run build && npm run assemble && wrangler deploy"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.1",

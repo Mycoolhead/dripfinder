@@ -17,6 +17,7 @@ var DIST_DIR = path.join(ROOT, 'dist');
 var DIST = path.join(DIST_DIR, 'dripfinder.min.js');
 var CONFIG_DIR = path.join(ROOT, 'configs');
 var EMBED_DIR = path.join(ROOT, 'embeds');
+var RELEASES_DIR = path.join(ROOT, 'releases');
 
 function readVersion(srcText) {
   var m = /VERSION\s*=\s*'([^']+)'/.exec(srcText);
@@ -57,7 +58,8 @@ async function build() {
     format: { ascii_only: true, comments: /^!/ }
   });
   if (result.error) throw result.error;
-  var min = result.code;
+  // Keep the banner comment's version in step with VERSION, wherever it is set.
+  var min = result.code.replace(/DripFinder v[0-9][0-9A-Za-z.\-]*/, 'DripFinder v' + version);
 
   var bad = nonAscii(min);
   if (bad.length) throw new Error('Build is not ASCII only: ' + bad.length + ' non-ASCII chars (first at index ' + bad[0] + ')');
@@ -65,6 +67,13 @@ async function build() {
   if (!fs.existsSync(DIST_DIR)) fs.mkdirSync(DIST_DIR, { recursive: true });
   fs.writeFileSync(DIST, min + '\n');
   console.log('  dist/dripfinder.min.js  (' + min.length + ' bytes, ASCII only)');
+
+  // Freeze this exact build under releases/<version>/ so a client can be pinned
+  // to it later (served at /v<version>/). These files are committed.
+  var relDir = path.join(RELEASES_DIR, version);
+  if (!fs.existsSync(relDir)) fs.mkdirSync(relDir, { recursive: true });
+  fs.writeFileSync(path.join(relDir, 'dripfinder.min.js'), min + '\n');
+  console.log('  releases/' + version + '/dripfinder.min.js  (frozen)');
 
   // 2) Embeds per config
   var configs = listConfigs();

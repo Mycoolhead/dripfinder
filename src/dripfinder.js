@@ -14,7 +14,23 @@
     return;
   }
 
-  var VERSION = '0.3.0';
+  var VERSION = '0.4.0';
+
+  // Where this script was loaded from. A client site includes
+  // <script src="https://<host>/v0/dripfinder.min.js">, so configs and the
+  // usage endpoint live at the same origin: /configs/<slug>.json and /e.
+  var SELF_SRC = (function () {
+    try {
+      if (document.currentScript && document.currentScript.src) return document.currentScript.src;
+      var s = document.getElementsByTagName('script');
+      for (var i = s.length - 1; i >= 0; i--) if (/dripfinder(\.min)?\.js/.test(s[i].src)) return s[i].src;
+    } catch (e) {}
+    return location.href;
+  })();
+  function sameOrigin(path) {
+    try { return new URL(path, SELF_SRC).toString(); } catch (e) { return path; }
+  }
+  var ENDPOINT = sameOrigin('/e');
 
   // Neutral defaults for every visitor-facing string the engine can show.
   // A config overrides any of these through its "ui" block (or resultTitle, kept for back-compat).
@@ -87,6 +103,27 @@
   }
 
   function digits(s) { return String(s || '').replace(/\D/g, ''); }
+
+  // Anonymous, first-party usage event. Sent with navigator.sendBeacon so it
+  // never blocks or slows the quiz. We send only: client slug, event name,
+  // matched item id, src, the page path and the date - never the visitor's
+  // feel/week/safety answers, and never anything that identifies a person.
+  function beacon(cfg, evt, item) {
+    if (!cfg._slug || cfg._beacon === 'off' || !cfg._beacon) return;
+    try {
+      var body = JSON.stringify({
+        s: cfg._slug, e: evt, i: item || '', src: cfg._src || '',
+        p: location.pathname, d: new Date().toISOString().slice(0, 10), v: VERSION
+      });
+      // text/plain keeps this a CORS-safelisted request, so the cross-origin
+      // beacon goes out with no preflight and no blocking.
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(cfg._beacon, new Blob([body], { type: 'text/plain' }));
+      } else {
+        fetch(cfg._beacon, { method: 'POST', body: body, keepalive: true, mode: 'no-cors', credentials: 'omit', headers: { 'Content-Type': 'text/plain' } });
+      }
+    } catch (e) {}
+  }
 
   /* ---------- scoring ---------- */
 
@@ -220,6 +257,14 @@
     var cfg = normalize(JSON.parse(JSON.stringify(config)));
     var ui = cfg.ui;
     var contact = cfg.clinic.contactName || cfg.clinic.name || '';
+
+    // Usage-event wiring (set from the host element; harmless when absent).
+    var getAttr = host.getAttribute ? function (k) { return host.getAttribute(k); } : function () { return null; };
+    var srcParam = '';
+    try { srcParam = new URLSearchParams(location.search).get('src') || ''; } catch (e) {}
+    cfg._slug = getAttr('data-client') || cfg.slug || '';
+    cfg._src = srcParam || getAttr('data-src') || '';
+    cfg._beacon = getAttr('data-events') || ENDPOINT;
     var root = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
     var app = el('div', { class: 'df', role: 'region', 'aria-label': (cfg.clinic.name ? cfg.clinic.name + ' ' : '') + ui.ariaLabel });
     var live = el('div', { 'aria-live': 'polite', style: 'position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden' });
@@ -240,6 +285,7 @@
         state.answers[q0.id] = q0.multi ? pre : [pre[0]];
         state.started = true;
         emit(cfg, 'start', { preselect: pre.join('|'), src: qs.get('src') || '' });
+        beacon(cfg, 'start');
       }
     } catch (e) {}
 
@@ -301,7 +347,7 @@
     }
 
     function choose(q, o) {
-      if (!state.started) { state.started = true; emit(cfg, 'start'); }
+      if (!state.started) { state.started = true; emit(cfg, 'start'); beacon(cfg, 'start'); }
       var cur = state.answers[q.id] || [];
       if (q.multi) {
         if (o.exclusive) cur = cur.indexOf(o.id) > -1 ? [] : [o.id];
@@ -330,8 +376,8 @@
       if (state.step >= total()) {
         state.pick = 0;
         var stop = stopFor(cfg, state.answers);
-        if (stop) emit(cfg, 'safety_stop', { level: stop });
-        else emit(cfg, 'result', { item: rank(cfg, state.answers)[0].item.id });
+        if (stop) { emit(cfg, 'safety_stop', { level: stop }); beacon(cfg, stop === 'emergency' ? 'stop_emergency' : 'stop_talk'); }
+        else { var top = rank(cfg, state.answers)[0].item.id; emit(cfg, 'result', { item: top }); beacon(cfg, 'result', top); }
       }
       render(true);
     }
@@ -360,7 +406,7 @@
       if (!href) return null;
       return el('a', {
         class: 'btn ghost wide', href: href, text: label || (ui.textPrefix + (cfg.clinic.contactName || cfg.clinic.name)),
-        onclick: function () { emit(cfg, 'text_click', {}); }
+        onclick: function () { emit(cfg, 'text_click', {}); beacon(cfg, 'text_click'); }
       });
     }
 
@@ -428,14 +474,14 @@
       if (cfg.afterHours) {
         tips.appendChild(el('p', { class: 'tip' }, [
           cfg.afterHours.text + ' ',
-          el('a', { href: bookHref({ id: 'after-hours', bookUrl: cfg.afterHours.url }), target: '_top', text: cfg.afterHours.linkLabel || ui.afterHoursLabel, onclick: function () { emit(cfg, 'book_click', { item: cur.id, after_hours: true }); } })
+          el('a', { href: bookHref({ id: 'after-hours', bookUrl: cfg.afterHours.url }), target: '_top', text: cfg.afterHours.linkLabel || ui.afterHoursLabel, onclick: function () { emit(cfg, 'book_click', { item: cur.id, after_hours: true }); beacon(cfg, 'book_click', cur.id); } })
         ]));
       }
       var row = el('div', { class: 'row', style: 'margin-top:6px' }, [
         el('a', {
           class: 'btn wide', href: bookHref(cur), target: '_top', rel: 'noopener',
           text: ui.bookPrefix + cur.name,
-          onclick: function () { emit(cfg, 'book_click', { item: cur.id }); }
+          onclick: function () { emit(cfg, 'book_click', { item: cur.id }); beacon(cfg, 'book_click', cur.id); }
         })
       ]);
       var tb = textButton(fill(ui.resultSmsText, { contact: contact, quiz: ui.quizName, item: cur.name }), cfg.clinic.textLabel);
@@ -460,7 +506,7 @@
           if (custom) {
             list.appendChild(el('li', null, [el('a', {
               class: 'opt', href: bookHref(custom), target: '_top', style: 'text-decoration:none',
-              onclick: function () { emit(cfg, 'book_click', { item: custom.id }); }
+              onclick: function () { emit(cfg, 'book_click', { item: custom.id }); beacon(cfg, 'book_click', custom.id); }
             }, [el('span', null, [el('b', { text: custom.name }), custom.short ? el('small', { text: custom.short }) : null]), custom.price ? el('em', { text: custom.price }) : null])]));
           }
           alt.appendChild(list);
@@ -476,23 +522,49 @@
     function restart() { reset(); emit(cfg, 'restart'); render(true); }
 
     render(false);
+    beacon(cfg, 'view');
     return { restart: restart, host: host };
   }
 
   /* ---------- auto-mount ---------- */
 
+  // Last resort when there is no config to render (fetch failed, bad JSON, or
+  // no config given). We never leave a blank box: show one Book button that
+  // goes straight to the clinic's booking page (data-fallback).
+  function renderFallback(node) {
+    var fb = node.getAttribute && node.getAttribute('data-fallback');
+    var mini = { _slug: (node.getAttribute && node.getAttribute('data-client')) || '', _beacon: (node.getAttribute && node.getAttribute('data-events')) || ENDPOINT, _src: '' };
+    try { mini._src = new URLSearchParams(location.search).get('src') || (node.getAttribute && node.getAttribute('data-src')) || ''; } catch (e) {}
+    if (!fb) return;
+    var root = node.attachShadow ? node.attachShadow({ mode: 'open' }) : node;
+    try { root.innerHTML = ''; } catch (e) {}
+    root.appendChild(el('style', { text: ':host{display:block}.dff{font:inherit;text-align:center;padding:18px}.dff a{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:14px 22px;border-radius:12px;background:#0e7c86;color:#fff;font-weight:700;text-decoration:none}' }));
+    root.appendChild(el('div', { class: 'dff' }, [
+      el('a', { href: fb, target: '_top', rel: 'noopener', text: (node.getAttribute && node.getAttribute('data-fallback-label')) || 'Book now', onclick: function () { beacon(mini, 'book_click'); } })
+    ]));
+    beacon(mini, 'view');
+  }
+
   function autoMount() {
     var nodes = document.querySelectorAll('[data-dripfinder]:not([data-dripfinder-ready])');
     Array.prototype.forEach.call(nodes, function (node) {
       node.setAttribute('data-dripfinder-ready', '1');
-      var url = node.getAttribute('data-config');
       var inline = node.querySelector('script[type="application/json"]');
       if (inline) {
-        try { var c = JSON.parse(inline.textContent); inline.remove(); mount(node, c); } catch (e) { console.error('DripFinder config error', e); }
-      } else if (url) {
-        fetch(url).then(function (r) { return r.json(); }).then(function (c) { mount(node, c); })
-          .catch(function (e) { console.error('DripFinder config error', e); });
+        try { var c = JSON.parse(inline.textContent); inline.remove(); mount(node, c); }
+        catch (e) { console.error('DripFinder config error', e); renderFallback(node); }
+        return;
       }
+      // data-config = explicit URL (kept for back-compat); data-client = fetch
+      // /configs/<slug>.json from the same origin as this script.
+      var explicit = node.getAttribute('data-config');
+      var slug = node.getAttribute('data-client');
+      var url = explicit || (slug ? sameOrigin('/configs/' + slug + '.json') : null);
+      if (!url) { renderFallback(node); return; }
+      fetch(url, { credentials: 'omit' })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (c) { mount(node, c); })
+        .catch(function (e) { console.error('DripFinder config error', e); renderFallback(node); });
     });
   }
 

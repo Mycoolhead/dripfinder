@@ -9,3 +9,7 @@ playwright-report/
 *.local
 .env
 .env.*
+.dev.vars
+# site/ is assembled by `npm run assemble` from releases/ + approved configs
+site/
+.wrangler/

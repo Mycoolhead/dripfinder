@@ -30,11 +30,14 @@ jobs:
 
       - name: Check built artifacts are committed and current
         run: |
-          if ! git diff --quiet -- dist embeds; then
-            echo "::error::dist/ or embeds/ are out of date. Run 'npm run build' and commit the result."
-            git --no-pager diff --stat -- dist embeds
+          if ! git diff --quiet -- dist embeds releases; then
+            echo "::error::dist/, embeds/ or releases/ are out of date. Run 'npm run build' and commit the result."
+            git --no-pager diff --stat -- dist embeds releases
             exit 1
           fi
+
+      - name: Assemble the deploy site (catches assemble/config errors)
+        run: npm run assemble
 
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium

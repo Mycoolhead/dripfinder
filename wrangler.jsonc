@@ -1,0 +1,25 @@
+{
+  // DripFinder host - one Cloudflare Worker that serves the engine + configs (static
+  // assets from site/) and handles the usage endpoint (/e) and stats page (/stats).
+  // See handoff/cloudflare-setup.md for the one-time account steps.
+  "name": "dripfinder",
+  "main": "worker/index.js",
+  "compatibility_date": "2024-11-06",
+  "assets": {
+    "directory": "./site",
+    "binding": "ASSETS",
+    // Serve /configs/* through the Worker so it can add CORS (client sites are a
+    // different origin). Everything else is served straight from site/.
+    "run_worker_first": ["/configs/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dripfinder",
+      // Replace after `wrangler d1 create dripfinder` (it prints the id).
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ],
+  "observability": { "enabled": true }
+  // STATS_KEYS is a secret, set with `wrangler secret put STATS_KEYS` (not stored here).
+}

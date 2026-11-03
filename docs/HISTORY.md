@@ -51,6 +51,30 @@ Built as a generic "find your bag" quiz with Silver / Gold / Platinum tiers. Nev
   - "drip finder" in the Text-the-clinic SMS body.
 - The Drip It homepage rewrite (docs/dripit-homepage-storybrand-seo-oct28.md) is GHL builder work for Muhammad, not code in this repo.
 
+## Nov 3, 2026: v0.4.0 (Phase 2, hosted engine + real numbers)
+- One hosted engine instead of a pasted-in block per site. A client site needs only:
+  `<div data-dripfinder data-client="dripit" data-fallback="https://.../services"></div>`
+  plus `<script src="https://<host>/v0/dripfinder.min.js" defer>`. A price or bug fix ships from
+  this repo with no re-paste on the client's site.
+- Engine: when `data-client` is set and there's no inline config, it fetches
+  `/configs/<slug>.json` from the script's own origin. Inline JSON still wins. A failed fetch
+  renders one Book button to `data-fallback` (never a blank box).
+- Anonymous usage events via `sendBeacon` to `/e`: view/start/result/stop/book/text with slug,
+  matched item, src, page path, date. Never the feel/week/safety answers, never IP or anything
+  identifying. dataLayer/gtag events kept as-is. A failed send never blocks the quiz.
+- Hosting is a single Cloudflare Worker: static assets (engine + configs) + `/e` ingest to D1 +
+  a stats page at `/stats/<slug>?key=`. Deploys from the private GitHub repo on push to main.
+- Versioned paths: `/v0/` = latest 0.x, `/v<version>/` = frozen (pinnable), `/configs/<slug>.json`.
+  Build freezes each release under `releases/<version>/`; `npm run assemble` builds the `site/`
+  folder Cloudflare serves. Configs with an empty `approved` block are skipped on deploy and
+  listed, so an unapproved answer-to-IV map never goes live - dripit is skipped until sign-off.
+- Stats keys live outside the repo at `~/dripfinder-secrets/stats-keys.txt`; the Worker reads them
+  from the `STATS_KEYS` secret (set with wrangler, never committed).
+- First render on an emulated 4G phone (cold cache, 4x CPU): ~0.7s median, including the engine
+  and config fetch.
+- Matching unchanged: all 9 legacy paths still recommend the same IV (asserted). 74 tests pass.
+- Not done yet: the live Cloudflare/GitHub setup (needs Michael's logins), and Deanna's approval.
+
 ## Oct 28, 2026: v0.3.0 (Phase 1, repo + safety net)
 - Turned the single paste-in block into a real repo: git, npm, build/validate/test/check-links, GitHub Actions. Repo stays private (it exposes the client list).
 - Engine is now industry-neutral so it can serve funeral homes and senior living later. No IV words in src/. Every visitor-facing string is a config value with a neutral default. The IV safety rules switch on with `"vertical": "iv"`.
