@@ -24,6 +24,7 @@
     "@axe-core/playwright": "4.10.1",
     "@playwright/test": "1.56.0",
     "ajv": "8.20.0",
-    "terser": "5.31.0"
+    "terser": "5.31.0",
+    "wrangler": "^4.158.0"
   }
 }

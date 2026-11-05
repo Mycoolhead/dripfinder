@@ -16,8 +16,8 @@
     {
       "binding": "DB",
       "database_name": "dripfinder",
-      // Replace after `wrangler d1 create dripfinder` (it prints the id).
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+      // Created Nov 5, 2026 with `wrangler d1 create dripfinder`.
+      "database_id": "035b0610-1b2b-4bd8-b2bd-725772c31921"
     }
   ],
   "observability": { "enabled": true }
