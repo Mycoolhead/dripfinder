@@ -3,11 +3,11 @@
 This replaces the big pasted-in quiz block on **/find-your-drip** with a tiny hosted snippet,
 so future fixes and price changes happen once on our side with no re-paste on the site.
 
-**Do not start until Michael says the config is approved and published.** Check first:
-open `https://<host>/configs/dripit.json` in a browser. If it loads JSON, you're good. If it
-shows "not found" (404), the quiz config isn't live yet - stop and tell Michael.
+The hosted quiz is **approved and live**. Before you swap, confirm it in a browser:
+open **https://dripfinder.michael-333.workers.dev/configs/dripit.json** - you should see a page
+of JSON (text starting with `{`). If it ever shows "not found" (404), stop and tell Michael.
 
-`<host>` is the DripFinder host address Michael gives you (e.g. `dripfinder.xxxx.workers.dev`).
+The DripFinder host is `dripfinder.michael-333.workers.dev` (already filled into the snippet below).
 
 ## Before you touch anything
 
@@ -26,10 +26,10 @@ shows "not found" (404), the quiz config isn't live yet - stop and tell Michael.
    <div data-dripfinder
         data-client="dripit"
         data-fallback="https://dripitivsolutions.glossgenius.com/services"></div>
-   <script src="https://<host>/v0/dripfinder.min.js" defer></script>
+   <script src="https://dripfinder.michael-333.workers.dev/v0/dripfinder.min.js" defer></script>
    ```
 
-   Replace `<host>` with the address Michael gave you. Leave everything else exactly as shown.
+   Leave everything exactly as shown.
 
 5. **Paste the crawlable block underneath the quiz** (this is what Google and AI search read,
    since the quiz itself renders in a way they can't see). Add a **second** Custom Code element
@@ -52,8 +52,8 @@ shows "not found" (404), the quiz config isn't live yet - stop and tell Michael.
 ## If anything looks wrong - roll back
 
 9. If the quiz shows only a single "Book now" button, or a blank box, or doesn't load:
-   - the hosted config may not be live. Open `https://<host>/configs/dripit.json` - if it 404s,
-     the swap was done too early. Roll back and tell Michael.
+   - open `https://dripfinder.michael-333.workers.dev/configs/dripit.json` - if it 404s,
+     something changed on our side. Roll back and tell Michael.
 10. To roll back: open the Custom Code element, delete the hosted snippet, and paste back the
     contents of your `dripit-find-your-drip-BACKUP.txt`. Remove the crawlable element you added.
     Save and publish. You're back to exactly how it was.
